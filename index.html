@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive Personality Quiz</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #fdf6f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  .quiz-container {
+    background: #fff;
+    padding: 20px 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    max-width: 500px;
+    width: 100%;
+  }
+  h2 {
+    color: #ff6f61;
+  }
+  .question {
+    margin-bottom: 15px;
+  }
+  .options button {
+    display: block;
+    margin: 8px 0;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 10px;
+    background-color: #ffd6cc;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    transition: background 0.3s;
+  }
+  .options button:hover {
+    background-color: #ffb3a0;
+  }
+  #result {
+    margin-top: 20px;
+    font-weight: bold;
+    color: #ff6f61;
+  }
+</style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <h2>Personality Quiz</h2>
+  <div id="quiz">
+    <div class="question" id="question"></div>
+    <div class="options" id="options"></div>
+  </div>
+  <div id="result"></div>
+</div>
+
+<script>
+const quizData = [
+  {
+    question: "What do you prefer on a weekend?",
+    options: [
+      { text: "Reading a book", score: "introvert" },
+      { text: "Going out with friends", score: "extrovert" },
+      { text: "Trying a new hobby", score: "adventurer" },
+      { text: "Watching movies alone", score: "introvert" }
+    ]
+  },
+  {
+    question: "How do you make decisions?",
+    options: [
+      { text: "Carefully analyze", score: "introvert" },
+      { text: "Go with your gut", score: "adventurer" },
+      { text: "Discuss with friends", score: "extrovert" },
+      { text: "Wait and see", score: "introvert" }
+    ]
+  },
+  {
+    question: "Choose your ideal vacation:",
+    options: [
+      { text: "Beach party with friends", score: "extrovert" },
+      { text: "Solo mountain trek", score: "adventurer" },
+      { text: "Relaxing home stay", score: "introvert" },
+      { text: "City exploration with a group", score: "extrovert" }
+    ]
+  }
+];
+
+let currentQuestion = 0;
+let scores = { introvert: 0, extrovert: 0, adventurer: 0 };
+
+function loadQuestion() {
+  if (currentQuestion >= quizData.length) {
+    showResult();
+    return;
+  }
+  const q = quizData[currentQuestion];
+  document.getElementById("question").innerText = q.question;
+  const optionsDiv = document.getElementById("options");
+  optionsDiv.innerHTML = "";
+  q.options.forEach(opt => {
+    const btn = document.createElement("button");
+    btn.innerText = opt.text;
+    btn.onclick = () => {
+      scores[opt.score]++;
+      currentQuestion++;
+      loadQuestion();
+    };
+    optionsDiv.appendChild(btn);
+  });
+}
+
+function showResult() {
+  let maxScore = 0;
+  let personality = "";
+  for (let type in scores) {
+    if (scores[type] > maxScore) {
+      maxScore = scores[type];
+      personality = type;
+    }
+  }
+  const resultDiv = document.getElementById("result");
+  resultDiv.innerText = `Your personality type is: ${personality.toUpperCase()}`;
+  document.getElementById("quiz").style.display = "none";
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>
